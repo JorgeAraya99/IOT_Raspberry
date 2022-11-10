@@ -25,7 +25,7 @@ def parseData(packet):
 
 #funcion que le asigna el unpack correcto a cada protocolo. se encuentra incompleta por causa de los valores necesarios para unpack.
 def protUnpack(protocol, data):
-    protocol_unpack = ["<B", "<Bl", "<BlBfBf"]
+    protocol_unpack = ["<2ci", "<2cicfcf", "<2cicfc2f", "<2cicfc8f", "<2cicicf2000f2000f2000f"] #revisar fs despues
     return unpack(protocol_unpack[protocol], data)
 
 #funcion que interpreta y separa valores del header. se reciben 8B (2 de ID y 6 de MAC), cc ( chars layer y protocol) y H (u short length)
@@ -33,14 +33,11 @@ def protUnpack(protocol, data):
 def headerDict(data):
     print(data)
     #se separan los valores
-    ID_Device1, ID_Device2, M1, M2, M3, M4, M5, M6, layer,  protocol, leng_msg = unpack("<10BH", data)
+    ID_Device, M1, M2, M3, M4, M5, M6, layer,  protocol, leng_msg = unpack("<h6B2cH", data) #ver si funcionan o estan mal puestos los char
     
     #se junta mac
     MAC = ".".join([hex(x)[2:] for x in [M1, M2, M3, M4, M5, M6]])
 
-    #se junta ID
-    #no se sabe si es necesario juntar los ID_Devices o si solo se puede recibir en una unica variable, como nunca funciono unpack no se pudo probar
-    ID_Device = ".".join([hex(x)[2:] for x in [ID_Device1, ID_Device2]])
     return {"ID_Device":ID_Device, "MAC":MAC, "layer":layer, "protocol":protocol, "length":leng_msg}
 
 #funcion que interpreta y separa los valores de data. Debería funcionar, pero no se tienen los formatos correctos en la funcion protUnpack
