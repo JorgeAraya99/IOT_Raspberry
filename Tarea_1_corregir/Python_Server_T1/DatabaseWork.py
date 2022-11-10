@@ -46,7 +46,7 @@ def select_first_value(conn):
 
 def dataSave_0(header, data, conn):
     cur = conn.cursor()
-    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3) values (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], header["MAC"], header["layer"], header["protocol"], header["length"], data["Val"], data["Batt_level"], data["Timestamp"]))
+    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3) values (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], str(header["MAC"]), int(header["layer"]), int(header["protocol"]), str(header["length"]), data["Val"], data["Batt_level"], data["Timestamp"]))
 
 def dataSave_1(header, data, conn):
     cur = conn.cursor()
