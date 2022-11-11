@@ -86,4 +86,4 @@ def dataSave(number, header, data, conn):
 
 def logSave(header, data, conn):
     cur = conn.cursor()
-    cur.execute('''insert into Logs (ID_Time, ID_Device, Transport_Layer, Protocol, Timestamp) values (?, ?, ?, ?, ?) ''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], header["layer"], header["protocol"], data["Timestamp"]))
+    cur.execute('''insert into Logs (ID_Time, ID_Device, Transport_Layer, Protocol, Timestamp) values (?, ?, ?, ?, ?) ''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], int(header["layer"]), int(header["protocol"]), int(data["Timestamp"])))
