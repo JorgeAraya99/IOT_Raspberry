@@ -437,7 +437,6 @@ int TCP_send_frag(int sock, char status, char protocolo){
     return err;
 }
 
-/*
 int UDP_send_frag(int sock, char status, char protocolo){
     //Parte el mensaje (payload) en trozos de 1000 btyes y los manda por separado, esperando un OK con cada trozo
     printf("Sending!\n");
@@ -493,7 +492,6 @@ int UDP_send_frag(int sock, char status, char protocolo){
 
     return err;
 }
-*/
 
 void tcp_client(int sock, char* buf, char* host_ip, int id_protocol, int tp_layer){
     
@@ -533,9 +531,24 @@ void tcp_client(int sock, char* buf, char* host_ip, int id_protocol, int tp_laye
         }
     }
 }
-/*
-void udp_client(int sock, char* buf, char* host_ip, struct sockaddr_in dest_addr, int id_protocol, int tp_layer){
 
+//void udp_client(int sock, char* buf, char* host_ip, struct sockaddr_in dest_addr, int id_protocol, int tp_layer){
+void udp_client(int addr_fam, int ip_proto, char* buf, char* host_ip, struct sockaddr_in dest_addr, int id_protocol, int tp_layer){    
+    int sock = socket(addr_fam, SOCK_DGRAM, ip_proto);
+    if (sock < 0) {
+        ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
+        break;
+    }
+
+    // Set timeout
+    struct timeval timeout;
+    timeout.tv_sec = 10;
+    timeout.tv_usec = 0;
+    setsockopt (sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout);
+    ESP_LOGI(TAG, "Socket udp ");
+
+    
+    ESP_LOGI(TAG, "sending data to %s by UDP", host_ip);
     while (1) {
         if(id_protocol == 4){
             int err = UDP_send_frag(sock, tp_layer ,id_protocol);
@@ -576,12 +589,13 @@ void udp_client(int sock, char* buf, char* host_ip, struct sockaddr_in dest_addr
     }
 
     if (sock != -1) {
-        ESP_LOGE(TAG, "Shutting down socket and restarting...");
+        ESP_LOGE(TAG, "Shutting down udp socket and restarting...");
         shutdown(sock, 0);
         close(sock);
     }
+    //vTaskDelete(NULL);
 }
-*/
+
 //********************CLIENTE************************
 void ini_client(void){
 
@@ -589,6 +603,7 @@ void ini_client(void){
     char host_ip[] = HOST_IP_ADDR;
     int addr_family = 0;
     int ip_protocol = 0;
+
     int id_protocol = 0;
     int tp_layer = 0;
 
@@ -618,18 +633,6 @@ void ini_client(void){
             break;
         }
         ESP_LOGI(TAG, "Successfully connected");
-
-        int udp_sock =  socket(addr_family, SOCK_DGRAM, ip_protocol);
-        if (udp_sock < 0) {
-            ESP_LOGE(TAG, "Unable to create udp_socket: errno %d", errno);
-            break;
-        }
-        // Set timeout
-        struct timeval timeout;
-        timeout.tv_sec = 10;
-        timeout.tv_usec = 0;
-        setsockopt (udp_sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout);
-        ESP_LOGI(TAG, "UDP socket created ");
 
         //preguntamos por protocolo
         char* conf_msg = dataprotocol00();
@@ -668,42 +671,8 @@ void ini_client(void){
             tcp_client(sock, rx_buffer, host_ip, id_protocol, tp_layer);
         }else{
             //xTaskCreate(udp_client, "udp_client", 4096, NULL, 5, NULL);
+            udp_client(addr_family, ip_protocol, rx_buffer, host_ip, id_protocol, tp_layer);
         }
-
-        /*
-        else{
-            ESP_LOGI(TAG, "sending data to %s by UDP", host_ip);
-            while (1) {
-                if(id_protocol == 4){
-                    int err = UDP_send_frag(sock, tcp, id_protocol);
-                    if (err < 0){
-                        ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
-                    }
-                }else{
-                    char* msg = mensaje(id_protocol, tcp);
-                    int err = sendto(udp_sock, msg, strlen(msg), 0, HOST_IP_ADDR, strlen(HOST_IP_ADDR));
-                    if (err < 0) {
-                        ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
-                        free(msg);
-                        break;
-                    }
-                    free(msg);
-                }
-                int len = recvfrom(udp_sock, rx_buffer, sizeof(rx_buffer) - 1, 0, HOST_IP_ADDR, strlen(HOST_IP_ADDR));
-                // Error occurred during receiving
-                if (len < 0) {
-                    ESP_LOGE(TAG, "recv failed: errno %d", errno);
-                    break;
-                }
-                // Data received
-                else {
-                    rx_buffer[len] = 0; // Null-terminate whatever we received and treat like a string
-                    ESP_LOGI(TAG, "Received %d bytes from %s:", len, host_ip);
-                    ESP_LOGI(TAG, "%s", rx_buffer);
-                }
-            }
-        }
-        */
 
         if (sock != -1) {
             ESP_LOGE(TAG, "Shutting down socket and restarting...");
