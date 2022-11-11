@@ -46,23 +46,23 @@ def select_first_value(conn):
 
 def dataSave_0(header, data, conn):
     cur = conn.cursor()
-    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3) values (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], str(header["MAC"]), int(header["layer"]), int(header["protocol"]), str(header["length"]), data["Val"], data["Batt_level"], data["Timestamp"]))
+    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3) values (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], str(header["MAC"]), int(header["layer"]), int(header["protocol"]), str(header["length"]), int(data["Val"]), int(data["Batt_level"]), int(data["Timestamp"])))
 
 def dataSave_1(header, data, conn):
     cur = conn.cursor()
-    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3, Data4, Data5, Data6, Data7) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], header["MAC"], header["layer"], header["protocol"], header["length"], data["Val"], data["Batt_level"], data["Timestamp"], data["Temp"], data["Pres"], data["Hum"], data["Co"]))
+    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3, Data4, Data5, Data6, Data7) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], str(header["MAC"]), int(header["layer"]), int(header["protocol"]), str(header["length"]), int(data["Val"]), int(data["Batt_level"]), int(data["Timestamp"]), int(data["Temp"]), float(data["Pres"]), float(data["Hum"]), int(data["Co"])))
 
 def dataSave_2(header, data, conn):
     cur = conn.cursor()
-    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], header["MAC"], header["layer"], header["protocol"], header["length"], data["Val"], data["Batt_level"], data["Timestamp"], data["Temp"], data["Pres"], data["Hum"], data["Co"], str(data["RMS"])))
+    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], str(header["MAC"]), int(header["layer"]), int(header["protocol"]), str(header["length"]), int(data["Val"]), int(data["Batt_level"]), int(data["Timestamp"]), int(data["Temp"]), float(data["Pres"]), float(data["Hum"]), int(data["Co"]), str(data["RMS"])))
 
 def dataSave_3(header, data, conn):
     cur = conn.cursor()
-    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10, Data11, Data12, Data13, Data14) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], header["MAC"], header["layer"], header["protocol"], header["length"], data["Val"], data["Batt_level"], data["Timestamp"], data["Temp"], data["Pres"], data["Hum"], data["Co"], str(data["RMS"]), str(data["Amp_x"]), str(data["Frec_x"]), data["Amp_y"], data["Frec_y"], data["Amp_z"], data["Frec_z"]))
+    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10, Data11, Data12, Data13, Data14) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], str(header["MAC"]), int(header["layer"]), int(header["protocol"]), str(header["length"]), int(data["Val"]), int(data["Batt_level"]), int(data["Timestamp"]), int(data["Temp"]), float(data["Pres"]), float(data["Hum"]), int(data["Co"]), str(data["RMS"]), str(data["Amp_x"]), str(data["Frec_x"]), float(data["Amp_y"]), float(data["Frec_y"]), float(data["Amp_z"]), float(data["Frec_z"])))
 
 def dataSave_4(header, data, conn):
     cur = conn.cursor()
-    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], header["MAC"], header["layer"], header["protocol"], header["length"], data["Val"], data["Batt_level"], data["Timestamp"], data["Temp"], data["Pres"], data["Hum"], data["Co"], data["Acc_x"], data["Acc_y"], data["Acc_z"]))
+    cur.execute('''insert into Datos (ID_Time, ID_Device, MAC, Transport_Layer, Protocol, Leng, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (str(header["ID_Device"]) + str(data["Timestamp"]), header["ID_Device"], str(header["MAC"]), int(header["layer"]), int(header["protocol"]), str(header["length"]), int(data["Val"]), int(data["Batt_level"]), int(data["Timestamp"]), int(data["Temp"]), float(data["Pres"]), float(data["Hum"]), int(data["Co"]), str(data["Acc_x"]), str(data["Acc_y"]), str(data["Acc_z"])))
 
 
 #Guardar data segun protocolo
