@@ -220,7 +220,7 @@ char* header(char protocol, char transportLayer){
     uint8_t* MACaddrs = malloc(6);
 	esp_efuse_mac_get_default(MACaddrs);
     //memcpy((void*) &(head[0]), (void*) MACaddrs, 2);
-    memcpy((void*) &(head[0]), (void*) ID, 2);
+    memcpy((void*) &(head[0]), (void*) &ID, 2);
     //memcpy((void*) &(head[0]), ID, 2);
 	memcpy((void*) &(head[2]), (void*) MACaddrs, 6);
     head[8]= transportLayer;
