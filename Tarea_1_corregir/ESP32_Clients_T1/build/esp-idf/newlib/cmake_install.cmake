@@ -34,6 +34,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/jesus/esp/tarea_uno/build/esp-idf/newlib/port/cmake_install.cmake")
+  include("/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/esp-idf/newlib/port/cmake_install.cmake")
 endif()
 

@@ -220,7 +220,7 @@ char* header(char protocol, char transportLayer){
     uint8_t* MACaddrs = malloc(6);
 	esp_efuse_mac_get_default(MACaddrs);
     //memcpy((void*) &(head[0]), (void*) MACaddrs, 2);
-    memcpy((void)* &(head[0]), (void*) ID, 2);
+    memcpy((void*) &(head[0]), (void*) &ID, 2);
     //memcpy((void*) &(head[0]), ID, 2);
 	memcpy((void*) &(head[2]), (void*) MACaddrs, 6);
     head[8]= transportLayer;
@@ -394,7 +394,7 @@ int TCP_send_frag(int sock, char status, char protocolo){
     //Parte el mensaje (payload) en trozos de 1000 btyes y los manda por separado, esperando un OK con cada trozo
     printf("Sending!\n");
     char *payload = mensaje(protocolo, status);
-    int payloadLen = messageLength(protocolo) - 1;
+    int payloadLen = messageLength(protocolo+1) -1;
     char rx_buffer[128];
     int packLen = 1000;
 
@@ -426,6 +426,8 @@ int TCP_send_frag(int sock, char status, char protocolo){
                 ESP_LOGE(TAG, "Server error in fragmented send.");
                 free(payload);
                 return -1;
+            }else{
+                ESP_LOGI(TAG, "fragment %i received correctly", i);
             }
         }
     }
@@ -437,17 +439,13 @@ int TCP_send_frag(int sock, char status, char protocolo){
     return err;
 }
 
-int UDP_send_frag(int sock, char status, char protocolo){
+int UDP_send_frag(int sock, char status, char protocolo, struct sockaddr_in dest_addr, char* buf){
     //Parte el mensaje (payload) en trozos de 1000 btyes y los manda por separado, esperando un OK con cada trozo
     printf("Sending!\n");
     char *payload = mensaje(protocolo, status);
-    int payloadLen = messageLength(protocolo) - 1;
+    int payloadLen = messageLength(protocolo+1) - 1;
     char rx_buffer[128];
     int packLen = 1000;
-
-    struct sockaddr_in to;
-    struct sockaddr from;
-    int addrlen;
 
     for (int i = 0; i < payloadLen; i += packLen){
         // Generamos el siguiente trozo
@@ -456,24 +454,19 @@ int UDP_send_frag(int sock, char status, char protocolo){
         memcpy(pack, &(payload[i]), size);
 
         //Enviamos el trozo
-        memset(&to, 0, sizeof(to));
-        to.sin_family = AF_INET;
-        to.sin_addr = inet_addr("192.168.4.1");
-        to.sin_port = htons(5000);
 
-        int err = sendto(sock, pack, size, 0,(struct sockaddr*)&to, sizeof(to));
+        int err = sendto(sock, pack, size, 0,(struct sockaddr*)&dest_addr, sizeof(dest_addr));
         free(pack);
         if (err < 0){
             ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
         }
 
-        // wait for confirmation
-        addrlen = sizeof(from);
-        int len = recvfrom(sock, rx_buffer, sizeof(rx_buffer) - 1, 0, &from, &addrlen);
+        struct sockaddr_storage source_addr; // Large enough for both IPv4 or IPv6
+        socklen_t socklen = sizeof(source_addr);
+        int len = recvfrom(sock, buf, sizeof(buf) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
         // Error occurred during receiving
-        if (len < 0){
-            //En caso de error abortamos
-            ESP_LOGE(TAG, "recv failed: errno %d", errno);
+        if (len < 0) {
+            ESP_LOGE(TAG, "recvfrom failed: errno %d", errno);
             break;
         }else{
             rx_buffer[len] = 0;
@@ -485,8 +478,9 @@ int UDP_send_frag(int sock, char status, char protocolo){
             }
         }
     }
+    
     //el último mensaje es solo un \0 para avisarle al server que terminamos
-    int err = sendto(sock, "\0", 1, 0, (struct sockaddr*)&to, sizeof(to));
+    int err = sendto(sock, "\0", 1, 0, (struct sockaddr*)&dest_addr, sizeof(dest_addr));
 
     free(payload);
 
@@ -537,7 +531,7 @@ void udp_client(int addr_fam, int ip_proto, char* buf, char* host_ip, struct soc
     int sock = socket(addr_fam, SOCK_DGRAM, ip_proto);
     if (sock < 0) {
         ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
-        break;
+        return;
     }
 
     // Set timeout
@@ -551,7 +545,7 @@ void udp_client(int addr_fam, int ip_proto, char* buf, char* host_ip, struct soc
     ESP_LOGI(TAG, "sending data to %s by UDP", host_ip);
     while (1) {
         if(id_protocol == 4){
-            int err = UDP_send_frag(sock, tp_layer ,id_protocol);
+            int err = UDP_send_frag(sock, tp_layer ,id_protocol, dest_addr, buf);
             if (err < 0){
                 ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
             }
@@ -576,9 +570,9 @@ void udp_client(int addr_fam, int ip_proto, char* buf, char* host_ip, struct soc
         }
         // Data received
         else {
-            rx_buffer[len] = 0; // Null-terminate whatever we received and treat like a string
+            buf[len] = 0; // Null-terminate whatever we received and treat like a string
             ESP_LOGI(TAG, "Received %d bytes from %s:", len, host_ip);
-            ESP_LOGI(TAG, "%s", bud);
+            ESP_LOGI(TAG, "%s", buf);
             if (strncmp(buf, "OK: ", 4) == 0) {
                 ESP_LOGI(TAG, "Received expected message, reconnecting");
                 break;
@@ -671,7 +665,7 @@ void ini_client(void){
             tcp_client(sock, rx_buffer, host_ip, id_protocol, tp_layer);
         }else{
             //xTaskCreate(udp_client, "udp_client", 4096, NULL, 5, NULL);
-            udp_client(addr_family, ip_protocol, rx_buffer, host_ip, id_protocol, tp_layer);
+            udp_client(addr_family, ip_protocol, rx_buffer, host_ip, dest_addr, id_protocol, tp_layer);
         }
 
         if (sock != -1) {

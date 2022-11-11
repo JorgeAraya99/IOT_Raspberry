@@ -11,7 +11,7 @@ def UDPServerFunc():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     s.bind((HOST, PORT))
-    s.listen(5)
+    #s.listen(5)
     print(f"Listening on {HOST}:{PORT}")
 
     #variable que representa cuantos mensajes se mandaron en el protocolo actual
@@ -30,12 +30,12 @@ def UDPServerFunc():
         print("Waiting for a connection")
 
 
-        conn, addr = s.accept()
-        print(f'Conectado por alguien ({addr[0]}) desde el puerto {addr[1]}')
+        #conn, addr = s.accept()
+        #print(f'Conectado por alguien ({addr[0]}) desde el puerto {addr[1]}')
+        
         while True:
-
             try:
-                data = conn.recv(1024)
+                data, addr = s.recvfrom(1024)
                 if data == b'':
                     break
             except ConnectionResetError:
@@ -45,12 +45,12 @@ def UDPServerFunc():
             protocolo = big_cycle
             respuesta_inicial = response(1, protocolo)
             print("Entregando configuración al cliente. Protocolo " + str(protocolo))
-            conn.sendto(respuesta_inicial, addr)
+            #s.sendto(respuesta_inicial, addr)
 
             #para el protocolo 4
             if big_cycle == 4:
                 #funcion de desfragmentacion
-                data = UDP_frag_recv(conn)
+                data = UDP_frag_recv(s)
 
                 if data == b'':
                     break
@@ -69,7 +69,7 @@ def UDPServerFunc():
                     #terminar conexión
                     print("Se termina la conexión")
                     respuesta_final = response(2, 0)
-                    conn.sendto(respuesta_final, addr)
+                    #s.sendto(respuesta_final, addr)
                     ready = True
                     break
                 else:
@@ -77,12 +77,12 @@ def UDPServerFunc():
 
                     smol_cycle += 1
                     respuesta = response(1, big_cycle)
-                    conn.sendto(respuesta, addr)
+                    #s.sendto(respuesta, addr)
                     break
 
             else:
                 try:
-                    data, addr = conn.recvfrom(1024)
+                    data, addr = s.recvfrom(1024)
                     if data == b'':
                         break
                 except ConnectionResetError:
@@ -106,13 +106,13 @@ def UDPServerFunc():
                     big_cycle +=1
                     smol_cycle = 1
                     respuesta = response(1, big_cycle)
-                    conn.sendto(respuesta, addr)
+                    #s.sendto(respuesta, addr)
                 else:
                     #se mantiene el protocolo
                     
                     smol_cycle += 1
                     respuesta = response(1, big_cycle)
-                    conn.sendto(respuesta, addr)
+                    #s.sendto(respuesta, addr)
 
-        conn.close()
+        s.close()
         print('Desconectado')
