@@ -12,7 +12,7 @@ Log='''
     Battery_Level INT,
     Conf_periphereal INT,
     Time_client DATETIME,
-    Time_server TIMESTAMP,
+    Time_server DATETIME DEFAULT CURRENT_TIMESTAMP,
     configuration_Id_device INT,
     FOREIGN KEY(Id_device) REFERENCES Configuration(Id_device)
 );'''
@@ -49,7 +49,7 @@ Data_1='''
     Amp_z FLOAT,
     Freq_z FLOAT,
     Time_client DATETIME,
-    Time_server TIMESTAMP,
+    Time_server DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(Id_device) REFERENCES Log(Id_device)
 );'''
 
@@ -63,7 +63,7 @@ Data_2='''
     Rgyr_y FLOAT,
     Rgyr_z FLOAT,
     Time_client DATETIME,
-    Time_server TIMESTAMP,
+    Time_server DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(Id_device) REFERENCES Log(Id_device)
 );'''
 
@@ -84,7 +84,7 @@ def write_table():
     pass
 
 if __name__ == "__main__":
-    create_table(Configuration)
-    create_table(Log)
-    create_table(Data_1)
-    create_table(Data_2)
+    create_table(Configuration, database)
+    create_table(Log, database)
+    create_table(Data_1, database)
+    create_table(Data_2, database)
