@@ -12,7 +12,7 @@ Log='''
     Battery_Level INT,
     Conf_periphereal INT,
     Time_client DATETIME,
-    Time_server DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Time_server DATETIME DEFAULT CURRENT_TIMESTAMP PRIMARY KEY,
     configuration_Id_device INT,
     FOREIGN KEY(Id_device) REFERENCES Configuration(Id_device)
 );'''
@@ -20,9 +20,9 @@ Log='''
 Configuration='''
     CREATE TABLE IF NOT EXISTS Configuration(
     Id_device INT PRIMARY KEY NOT NULL,
-    Status_conf INT,
-    Protocol_conf INT,
-    Acc_campling INT,
+    Status_conf INT PRIMARY KEY,
+    Protocol_conf INT PRIMARY KEY,
+    Acc_sampling INT,
     Acc_sensibility INT,
     Gyro_sensibility INT,
     BME688_sampling INT,
@@ -49,7 +49,7 @@ Data_1='''
     Amp_z FLOAT,
     Freq_z FLOAT,
     Time_client DATETIME,
-    Time_server DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Time_server DATETIME DEFAULT CURRENT_TIMESTAMP PRIMARY KEY,
     FOREIGN KEY(Id_device) REFERENCES Log(Id_device)
 );'''
 
@@ -63,7 +63,7 @@ Data_2='''
     Rgyr_y FLOAT,
     Rgyr_z FLOAT,
     Time_client DATETIME,
-    Time_server DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Time_server DATETIME DEFAULT CURRENT_TIMESTAMP PRIMARY KEY,
     FOREIGN KEY(Id_device) REFERENCES Log(Id_device)
 );'''
 
@@ -78,10 +78,6 @@ def create_table(table, db_file):
         print(e)
 
     conn.close()
-
-#funcion para insertar en las tablas (configuration)
-def write_table():
-    pass
 
 if __name__ == "__main__":
     create_table(Configuration, database)
