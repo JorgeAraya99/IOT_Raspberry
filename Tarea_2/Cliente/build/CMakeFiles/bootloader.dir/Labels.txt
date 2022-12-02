@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/CMakeFiles/bootloader
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/CMakeFiles/bootloader.rule
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/CMakeFiles/bootloader-complete.rule
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
