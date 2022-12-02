@@ -2,11 +2,14 @@ from socket import timeout
 import numpy
 from findAddresses import findAddresses
 import pygatt
+from struct import pack
 from ex import Ui_Dialog
 from PyQt5 import QtCore, QtGui, QtQuickWidgets, QtWidgets
 import pyqtgraph as pg
 import time
 import logging
+import sqlite3 as sql
+from sqlite3 import Error
 
 class GUIController:
     def __init__(self, parent):
@@ -23,17 +26,22 @@ class GUIController:
         print()
         
     def actualizarMacs(self):
-        # actualiza la lista de dispositivos con bluetooth disponibles
+        # actualiza la lista de dispositivos con bluetooth disponibles: boton search_esp32
         adrs = findAddresses()
         self.macs = adrs[1]
         self.UUIDs = adrs[2]
-        self.ui.selec_7.clear()
-        self.ui.selec_7.addItems(adrs[0])
+        self.ui.esp32_select.clear()
+        self.ui.esp32_select.addItems(adrs[0])
+        
         #print()
+
+    def setSignals(self):
+        self.ui.search_esp32.clicked.connect(self.actualizarMacs)
+        self.ui.config_btn.clicked.connect(self.configSetup)
 
     def conectarMac(self):
         # se conecta mediante BLE a un dispostivo disponible
-        indx = self.ui.selec_7.currentIndex()
+        indx = self.ui.esp32_select.currentIndex()
         self.macindx = indx
         ##pygatt
         logging.basicConfig()
@@ -58,12 +66,74 @@ class GUIController:
             finally:
                 self.adapter.stop()
         print("Termino de test de conexión")
-    
+
+    def getConfigParams(self):
+        params = []
+        confMode= self.ui.config_mode_select.currentIndex()
+        statusSelect= self.ui.status_select.currentIndex()
+        #conectselect
+        print(str(self.ui.config_mode_select.currentIndex() =="Configuracion por Bluetooth"))
+        print(str(self.ui.config_mode_select.currentIndex()))
+        #Reisar como usar conf y set status de forma separada
+        if confMode == 0:
+            params.append(0)
+        if confMode == 1:
+            params.append(20)
+
+        if statusSelect == 0:
+            params.append(21)
+
+
+        if statusSelect == 1:
+            params.append(22)
+            
+        if statusSelect == 2:
+            params.append(23)
+            
+        if statusSelect == 3:
+            params.append(30)
+            
+        if statusSelect == 4:
+            params.append(31)
+        
+        #agregar id protocol
+
+        params.append(self.ui.id_protocol_select.currentIndex())
+
+        TCP = int(self.ui.port_tcp_field.toPlainText())
+        UDP = int(self.ui.port_udp_field.toPlainText())
+        IP = int(self.ui.host_ip_addr_field.toPlainText())
+        SSID = self.ui.ssid_field.toPlainText()
+        PASS = self.ui.pass_field.toPlainText()
+        params.append(int(self.ui.acc_samp_field.toPlainText()))
+        params.append(int(self.ui.acc_sens_field.toPlainText()))
+        params.append(int(self.ui.gyro_sens_field.toPlainText()))
+        params.append(int(self.ui.bme_field.toPlainText()))
+        params.append(int(self.ui.disc_time_field.toPlainText()))
+        params.append(TCP)
+        params.append(UDP)
+        params.append(IP)
+        SSID = bytes(SSID, "ascii")
+        params.append(SSID) #JorgePiWireless
+        PASS = bytes(PASS, "ascii")
+        params.append(PASS) #AardvarkBadgerHedgehog
+        #len(SSID) == len(JorgePiWireless)
+        print(type(TCP)) 
+        print(UDP) 
+        print(IP) 
+        print(SSID) 
+        print(PASS)
+        print(len(params))
+        print(params)
+
+        return params   
+
+
     def configSetup(self):
         # envía una configuración indicada por BLE al dispositivo conectado
         ESPconf = self.getConfigParams()
-        pack = ESPconf.pack()
-        print("El largo del paquete es:" + str(len(pack)))
+        paquete = pack("<iiiiiiiiiii15s22s",ESPconf[0], ESPconf[1], ESPconf[2], ESPconf[3], ESPconf[4] ,ESPconf[5],ESPconf[6],ESPconf[7],ESPconf[8],ESPconf[9], ESPconf[10], ESPconf[11], ESPconf[12])
+        print("El largo del paquete es:" + str(len(paquete)))
         qty=0
         while qty<100:
             try:
@@ -75,7 +145,7 @@ class GUIController:
                 # La siguiente linea es para escribir en la caracteristica de UUID list(characteristics)[4], puede hardcodear si
                 # sabe la UUID de la caracteristica a escribir, este misma funcion para leer es tan solo char_read
                 # Recomiendo leer acerca del sistema de Subscribe para recibir notificaciones del cambio u otros
-                device.char_write(list(characteristics)[4], pack)
+                device.char_write(list(characteristics)[4], paquete)
                 print("Se escribio el paquete")
                 qty = 100
             except pygatt.exceptions.NotConnectedError:
@@ -85,6 +155,20 @@ class GUIController:
                 time.sleep(1)
             finally:
                 self.adapter.stop()
+
+    def DataSave_1(self,header, dict, db_file, conf):
+        conn = None
+
+        try:
+            conn = sql.connect(db_file)
+        except Error as e:
+            print(e)
+
+        cur = conn.cursor()
+
+        cur.execute(''' INSERT INTO Configuration (Id_device, Status_report, Battery_level, Time_client, Conf_peripheral) VALUES (?, ?, ?, ?, ?) ''', (header["ID_device"], header["Status"], dict["Batt_level"], dict["Time"]))
+
+        conn.close()
 
 if __name__ == "__main__":
     import sys
