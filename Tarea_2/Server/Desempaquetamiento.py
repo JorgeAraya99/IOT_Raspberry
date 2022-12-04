@@ -18,11 +18,11 @@ def parseData(packet):
 
 
 def protUnpack(protocol, data):
-    protocol_unpack = ["<2ci", "<2cicfcf", "<2cicfc2f", "<2cicfc8f", "<2cicicf2000f2000f2000f"] #revisar fs despues
+    protocol_unpack = ["<2ci", "<2cicicf", "<2cicic2f", "<2cicic8f", "<2cicicf2000f2000f2000f2000f2000f2000f"] #revisar fs despues
     return unpack(protocol_unpack[protocol], data)
 
 def headerDict(header):
-    ID, M1, M2, M3, M4, M5, M6, protocol, status, leng = unpack("<algo", header)
+    ID, M1, M2, M3, M4, M5, M6, protocol, status, leng = unpack("<h6b2cH", header)
 
     MAC = ".".join([hex(x)[2:] for x in [M1, M2, M3, M4, M5, M6]])
 
@@ -39,7 +39,7 @@ def dataDict(protocol, data):
             return {key:val for (key, val) in zip(keys, unp)}
 
     #valores de cada protocolo
-    p1 = ["Val", "Batt_level"]
+    p1 = ["Val", "Batt_level", "Timestamp"]
     p2 = ["Val", "Batt_level", "Timestamp", "Temp", "Pres", "Hum", "Co"]
     p3 = ["Val", "Batt_level", "Timestamp", "Temp", "Pres", "Hum", "Co", "RMS"]
     p4 = ["Val", "Batt_level", "Timestamp", "Temp", "Pres", "Hum", "Co", "RMS", "Amp_x", "Frec_x", "Amp_y", "Frec_y", "Amp_z", "Frec_z"]

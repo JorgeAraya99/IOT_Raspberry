@@ -9,7 +9,7 @@ def UDPServerFunc(host, port, protocol, conf_p):
     PROTOCOL = protocol
     CONF_P = conf_p
 
-    database = ""
+    database = "Data_Base/tarea2.db"
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
