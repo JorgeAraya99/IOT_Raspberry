@@ -17,7 +17,7 @@ def findAddresses():
     async def main():
         devices = await BleakScanner.discover()
         for d in devices:
-            #print(d)
+            print(d)
             names.append(d.name)
             macs.append(d.address)
             UUIDs.append(d.details['props']['UUIDs'])

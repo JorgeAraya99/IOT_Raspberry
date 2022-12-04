@@ -20,13 +20,13 @@ Log='''
 Configuration='''
     CREATE TABLE IF NOT EXISTS Configuration(
     Id_device INT PRIMARY KEY NOT NULL,
-    Status_conf INT PRIMARY KEY,
-    Protocol_conf INT PRIMARY KEY,
+    Status_conf INT,
+    Protocol_conf INT,
     Acc_sampling INT,
     Acc_sensibility INT,
     Gyro_sensibility INT,
     BME688_sampling INT,
-    Discontinuous_time INT,
+    Discontinuos_time INT,
     TCP_PORT INT,
     UDP_PORT INT,
     Host_ip_addr INT,
@@ -67,6 +67,11 @@ Data_2='''
     FOREIGN KEY(Id_device) REFERENCES Log(Id_device)
 );'''
 
+Finished = '''
+    CREATE TABLE IF NOT EXISTS Finished(
+    STAT INT NOT NULL PRIMARY KEY
+);'''
+
 #funcion que crea las tablas
 def create_table(table, db_file):
     conn = None
@@ -78,9 +83,26 @@ def create_table(table, db_file):
         print(e)
 
     conn.close()
+    
+def insert_Finished(db_file):
+    conn = None
+    order = '''
+        INSERT INTO Finished (STAT) VALUE (2);
+    '''
+    
+    try:
+        conn = sql.connect(db_file)
+        conn.cursor().execute(order)
+        conn.commit()
+    except Error as e:
+        print(e)
+        
+    conn.close()
 
 if __name__ == "__main__":
     create_table(Configuration, database)
     create_table(Log, database)
     create_table(Data_1, database)
     create_table(Data_2, database)
+    create_table(Finished, database)
+    insert_Finished(database)
