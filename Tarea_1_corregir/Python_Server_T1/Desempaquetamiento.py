@@ -14,7 +14,7 @@ def parseData(packet):
     header = packet[:12]
     data = packet[12:]
     headerD = headerDict(header)
-    dataD = dataDict(data)
+    dataD = dataDict(headerD["Protocol"], data)
     
     if dataD is not None:
         #guardar datos en tabla

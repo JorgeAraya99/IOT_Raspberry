@@ -11,15 +11,17 @@ def DataSave_1(header, dict, db_file, conf):
     except Error as e:
         print(e)
     
-    conn.execute(''' INSERT INTO Log (Id_device, Status_report, Battery_level, Time_client, Conf_peripheral) VALUES (?, ?, ?, ?, ?) ''', (header["ID_device"], header["Status"], dict["Batt_level"], dict["Time"]))
+    cur = conn.cursor()
 
-    conn.execute(''' INSERT INTO Datos_1 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
+    cur.execute(''' INSERT INTO Log (Id_device, Status_report, Protocol_report, Battery_level, Conf_peripheral, Time_client, configuration_Id_device) VALUES (?, ?, ?, ?, ?) ''', (header["ID_device"], header["Status"], header["Protocol"], dict["Batt_level"], conf,dict["Time"], header["ID_device"]))
 
-    conn.execute(''' INSERT INTO Datos_2 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
+    cur.execute(''' INSERT INTO Datos_1 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
+
+    cur.execute(''' INSERT INTO Datos_2 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
 
     conn.close()
 
-def DataSave_2(header, dict, db_file):
+def DataSave_2(header, dict, db_file, conf):
     conn = None
 
     try:
@@ -27,15 +29,17 @@ def DataSave_2(header, dict, db_file):
     except Error as e:
         print(e)
     
-    conn.execute(''' INSERT INTO Log (Id_device, Status_report, Battery_level, Time_client) VALUES (?, ?, ?) ''', (header["ID_device"], header["Status"], dict["Batt_level"], dict["Time"]))
+    cur = conn.cursor()
 
-    conn.execute(''' INSERT INTO Datos_1 (Id_device, Time_client, Temperature, Press, Hum, CO) VALUES (?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["Temp"], dict["Press"], dict["Hum"], dict["CO"]))
+    cur.execute(''' INSERT INTO Log (Id_device, Status_report, Protocol_report, Battery_level, Conf_peripheral, Time_client, configuration_Id_device) VALUES (?, ?, ?, ?, ?) ''', (header["ID_device"], header["Status"], header["Protocol"], dict["Batt_level"], conf,dict["Time"], header["ID_device"]))
 
-    conn.execute(''' INSERT INTO Datos_2 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
+    cur.execute(''' INSERT INTO Datos_1 (Id_device, Time_client, Temperature, Press, Hum, CO) VALUES (?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["Temp"], dict["Press"], dict["Hum"], dict["CO"]))
+
+    cur.execute(''' INSERT INTO Datos_2 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
 
     conn.close()
 
-def DataSave_3(header, dict, db_file):
+def DataSave_3(header, dict, db_file, conf):
     conn = None
 
     try:
@@ -43,15 +47,17 @@ def DataSave_3(header, dict, db_file):
     except Error as e:
         print(e)
     
-    conn.execute(''' INSERT INTO Log (Id_device, Status_report, Battery_level, Time_client) VALUES (?, ?, ?) ''', (header["ID_device"], header["Status"], dict["Batt_level"], dict["Time"]))
+    cur = conn.cursor()
 
-    conn.execute(''' INSERT INTO Datos_1 (Id_device, Time_client, Temperature, Press, Hum, CO, RMS) VALUES (?, ?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["Temp"], dict["Press"], dict["Hum"], dict["CO"], dict["RMS"]))
+    cur.execute(''' INSERT INTO Log (Id_device, Status_report, Protocol_report, Battery_level, Conf_peripheral, Time_client, configuration_Id_device) VALUES (?, ?, ?, ?, ?) ''', (header["ID_device"], header["Status"], header["Protocol"], dict["Batt_level"], conf,dict["Time"], header["ID_device"]))
 
-    conn.execute(''' INSERT INTO Datos_2 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
+    cur.execute(''' INSERT INTO Datos_1 (Id_device, Time_client, Temperature, Press, Hum, CO, RMS) VALUES (?, ?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["Temp"], dict["Press"], dict["Hum"], dict["CO"], dict["RMS"]))
+
+    cur.execute(''' INSERT INTO Datos_2 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
 
     conn.close()
 
-def DataSave_4(header, dict, db_file):
+def DataSave_4(header, dict, db_file, conf):
     conn = None
 
     try:
@@ -59,15 +65,17 @@ def DataSave_4(header, dict, db_file):
     except Error as e:
         print(e)
     
-    conn.execute(''' INSERT INTO Log (Id_device, Status_report, Battery_level, Time_client) VALUES (?, ?, ?) ''', (header["ID_device"], header["Status"], dict["Batt_level"], dict["Time"]))
+    cur = conn.cursor()
 
-    conn.execute(''' INSERT INTO Datos_1 (Id_device, Time_client, Temperature, Press, Hum, CO, RMS, Amp_x, Freq_x, Amp_y, Freq_y, Amp_z, Freq_z) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["Temp"], dict["Press"], dict["Hum"], dict["CO"], dict["RMS"], dict["Ampx"] , dict["Freqx"] , dict["Ampy"] , dict["Freqy"] , dict["Ampz"] , dict["Freqz"]))
+    cur.execute(''' INSERT INTO Log (Id_device, Status_report, Protocol_report, Battery_level, Conf_peripheral, Time_client, configuration_Id_device) VALUES (?, ?, ?, ?, ?) ''', (header["ID_device"], header["Status"], header["Protocol"], dict["Batt_level"], conf,dict["Time"], header["ID_device"]))
 
-    conn.execute(''' INSERT INTO Datos_2 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
+    cur.execute(''' INSERT INTO Datos_1 (Id_device, Time_client, Temperature, Press, Hum, CO, RMS, Amp_x, Freq_x, Amp_y, Freq_y, Amp_z, Freq_z) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["Temp"], dict["Press"], dict["Hum"], dict["CO"], dict["RMS"], dict["Amp_x"] , dict["Frec_x"] , dict["Amp_y"] , dict["Frec_y"] , dict["Amp_z"] , dict["Frec_z"]))
+
+    cur.execute(''' INSERT INTO Datos_2 (Id_device, Time_client) VALUES (?, ?) ''', (header["Id_device"], dict["Time"]))
 
     conn.close()
 
-def DataSave_5(header, dict, db_file):
+def DataSave_5(header, dict, db_file, conf):
     conn = None
 
     try:
@@ -75,46 +83,50 @@ def DataSave_5(header, dict, db_file):
     except Error as e:
         print(e)
     
-    conn.execute(''' INSERT INTO Log (Id_device, Status_report, Battery_level, Time_client) VALUES (?, ?, ?) ''', (header["ID_device"], header["Status"], dict["Batt_level"], dict["Time"]))
+    cur = conn.cursor()
 
-    conn.execute(''' INSERT INTO Datos_1 (Id_device, Time_client, Temperature, Press, Hum, CO) VALUES (?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["Temp"], dict["Press"], dict["Hum"], dict["CO"]))
+    cur.execute(''' INSERT INTO Log (Id_device, Status_report, Protocol_report, Battery_level, Conf_peripheral, Time_client, configuration_Id_device) VALUES (?, ?, ?, ?, ?) ''', (header["ID_device"], header["Status"], header["Protocol"], dict["Batt_level"], conf,dict["Time"], header["ID_device"]))
 
-    conn.execute(''' INSERT INTO Datos_2 (Id_device, Time_client, Racc_x, Racc_y, Racc_z, Rgyr_x, Rgyr_y, Rgyr_z) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["Raccx"], dict["Raccy"], dict["Raccy"], dict["Rgyrx"], dict["Rgyry"], dict["Rgyrz"]))
+    cur.execute(''' INSERT INTO Datos_1 (Id_device, Time_client, Temperature, Press, Hum, CO) VALUES (?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["Temp"], dict["Press"], dict["Hum"], dict["CO"]))
 
-    conn.close()
-
-
-#funcion que guarda en data segun protocolo
-def DataSave(header, dict, protocol, db_file, conf):
-    match protocol:
-        case 1:
-            DataSave_1(header, dict, db_file, conf)
-        case 2:
-            DataSave_2(header, dict, db_file, conf)
-        case 3:
-            DataSave_3(header, dict, db_file, conf)
-        case 4:
-            DataSave_4(header, dict, db_file, conf)
-        case 5:
-            DataSave_5(header, dict, db_file, conf)
-        case _:
-            print("protocolo invalido")
-
-#funcion que guarda en Log
-
-"""
-def LogSave(header, dict, db_file):
-    conn = None
-
-    try:
-        conn = sql.connect(db_file)
-    except Error as e:
-        print(e)
-    
-    conn.execute(''' INSERT INTO Log () VALUES () ''', (header[1], dict[1]))
+    cur.execute(''' INSERT INTO Datos_2 (Id_device, Time_client, Racc_x, Racc_y, Racc_z, Rgyr_x, Rgyr_y, Rgyr_z) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ''', (header["Id_device"], dict["Time"], dict["RAcc_x"], dict["RAcc_y"], dict["RAcc_z"], dict["Rgyr_x"], dict["Rgyr_y"], dict["Rgyr_z"]))
 
     conn.close()
-"""
+
+
+#funcion que guarda en data y log segun protocolo
+def DataSave(header, dict, protocol, db_file, conf): # que es conf
+    if protocol == 1:
+        DataSave_1(header, dict, db_file, conf)
+    elif protocol == 2:
+        DataSave_2(header, dict, db_file, conf)
+    elif protocol == 3:
+        DataSave_3(header, dict, db_file, conf)
+    elif protocol == 4:
+        DataSave_4(header, dict, db_file, conf)
+    elif protocol == 5:
+        DataSave_5(header, dict, db_file, conf)
+    else:
+        print("protocolo invalido")
+
+
 #funcion que haga query de configuracion
-def getConfig():
-    pass
+def getConfig(ID, db_file):
+    conn = None
+    
+    try:
+        conn = sql.connect(db_file)
+    except Error as e:
+        print(e)
+
+    cur = conn.cursor()
+
+    order = "SELECT * FROM Configuration WHERE Id_device = " + str(ID) 
+
+    cur.execute(order)
+
+    config = cur.fetchall()
+
+    conn.close()
+
+    return config

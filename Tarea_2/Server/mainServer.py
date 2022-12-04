@@ -1,5 +1,7 @@
-import socket
-from DatabaseWork import *
+import DatabaseWork
+import TCPServer
+import UDPServer
+import BLEServer
 #from Desempaquetamiento import *
 
 #server principal para conexion status 0
@@ -13,24 +15,27 @@ from DatabaseWork import *
 #Manadr config inicial a la ESP
 
 
-def mainSever(x):
-    #revisar CI
+def mainSever(ID):
 
-    #Guardar en DB
+    condition = str(input())
+    if condition== "n":
+        return
+    
+    #revisar CI
+    config = DatabaseWork.getConfig(ID)
 
     #Prender server correspondiente
-
-    match x:
-        case "BLED":
-            pass
-        case "BLEC":
-            pass
-        case "TCPD":
-            pass
-        case "TCPC":
-            pass
-        case "UCP":
-            pass
-        case _:
-            pass
+    status = config
+    host = config
+    port = config
+    protocol = config
+    conf_p = config
     
+    if status == 21 or status ==22:
+        TCPServer.TCPServerFunc(host, port, protocol, conf_p)
+    elif status ==23:
+        UDPServer.UDPServerFunc(host, port, protocol, conf_p)
+    elif status == 30 or status == 31:
+        BLEServer.BLEServerFunc(host, port, protocol, conf_p)
+    else:
+        print("Invaid status input")
