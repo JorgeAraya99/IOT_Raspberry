@@ -1040,31 +1040,6 @@ background-color: rgb(11, 0, 172);
        <string>Configuracion via TCP en BD</string>
       </property>
      </item>
-     <item>
-      <property name="text">
-       <string>Conexión TCP continua</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Conexión TCP discontinua</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Conexión UDP</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>BLE continua</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>BLE discontinua</string>
-      </property>
-     </item>
     </widget>
     <widget class="QLabel" name="label_31">
      <property name="geometry">
