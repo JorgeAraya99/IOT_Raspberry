@@ -86,9 +86,7 @@ def create_table(table, db_file):
     
 def insert_Finished(db_file):
     conn = None
-    order = '''
-        INSERT INTO Finished (STAT) VALUE (2);
-    '''
+    order ="INSERT INTO Finished (STAT) VALUES (2);"
     
     try:
         conn = sql.connect(db_file)

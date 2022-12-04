@@ -170,14 +170,16 @@ def getFinished(db_file):
     except Error as e:
         print(e)
     
-    order = "SELECT STAT FROM Finished WHERE "
+    order = "SELECT MIN(STAT) FROM Finished"
     
-    conn.cursor().excecute(order)
+    cur = conn.cursor()
+    
+    cur.execute(order)
     
     config = cur.fetchall()
     
     conn.close()
-    
+    print(config)
     Val = config[0][0]
     
     return Val

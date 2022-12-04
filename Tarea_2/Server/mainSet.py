@@ -43,6 +43,23 @@ class GUIController:
     def setSignals(self):
         self.ui.search_esp32.clicked.connect(self.actualizarMacs)
         self.ui.config_btn.clicked.connect(self.configSetup)
+        self.ui.reset_btn.clicked.connect(self.Reset)
+
+    def Reset(self):
+        conn = None
+        
+        try:
+                conn = sql.connect(database)
+        except Error as e:
+                print(e)
+                
+        order = "INSERT INTO Finished (STAT) VALUES (1)"
+        
+        conn.cursor().execute(order)
+        
+        conn.commit()
+        
+        conn.close()
 
     def conectarMac(self):
         # se conecta mediante BLE a un dispostivo disponible
