@@ -13,7 +13,7 @@ def UDPServerFunc(host, port, protocol, conf_p):
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    s.bind(HOST, PORT)
+    s.bind((HOST, PORT))
 
     print(f"Listening on {HOST}:{PORT}")
 
