@@ -44,7 +44,14 @@ class GUIController:
         self.ui.search_esp32.clicked.connect(self.actualizarMacs)
         self.ui.config_btn.clicked.connect(self.configSetup)
         self.ui.reset_btn.clicked.connect(self.Reset)
+        self.ui.plot_1_start_btn.clicked.connect(self.Graph1)
 
+    def Graph1(self):
+        y = [2, 4,6,8,10,12,14,16,20]
+        x = [2, 4,6,8,10,12,14,16,20]
+        
+        self.ui.plot1.addPlot().plot().setData(x,y)
+        
     def Reset(self):
         conn = None
         
@@ -148,7 +155,11 @@ class GUIController:
         print(PASS)
         print(len(params))
         print(params)
-
+        
+        if params[2]<1 or params[2]>5 or params[8]>65535 or params[8]< 1024 or params[9]>65535 or params[9]<1024:
+                print("Input Error")
+                return None
+        
         return params   
         
     def configSetup(self):
@@ -158,11 +169,14 @@ class GUIController:
                 self.configSetupBT(Param)
         else:
                 self.configSetupTCP(Param)
-                
+        self.actual += 1
 
     def configSetupBT(self, params):
         # envía una configuración indicada por BLE al dispositivo conectado
         self.conectarMac()
+        f = open("macaddresbt.txt", "w")
+        f.write(str(self.macindx))
+        f.close()
         ESPconf = params
         paquete = pack("<iiiiiiiiiii15s22s",ESPconf[0], ESPconf[1], ESPconf[2], ESPconf[3], ESPconf[4] ,ESPconf[5],ESPconf[6],ESPconf[7],ESPconf[8],ESPconf[9], ESPconf[10], ESPconf[11], ESPconf[12])
         print("El largo del paquete es:" + str(len(paquete)))
@@ -193,7 +207,7 @@ class GUIController:
         #123456789012345 6789012
         #192.168.4.1
         ESPconf = params
-        paquete = pack("<iiiiiiiiii11s15s22s",ESPconf[0], ESPconf[1], ESPconf[2], ESPconf[3], ESPconf[4] ,ESPconf[5],ESPconf[6],ESPconf[7],ESPconf[8],ESPconf[9], ESPconf[10], ESPconf[11], ESPconf[12])
+        paquete = pack("<BBiiiiiiii11s15s22s",ESPconf[0], ESPconf[1], ESPconf[2], ESPconf[3], ESPconf[4] ,ESPconf[5],ESPconf[6],ESPconf[7],ESPconf[8],ESPconf[9], ESPconf[10], ESPconf[11], ESPconf[12])
         print("El largo del paquete es:" + str(len(paquete)))
         tcp_BD.TCPServerInit(paquete)
         

@@ -20,14 +20,14 @@ def UDPServerFunc(host, port, protocol, conf_p):
     ready = False
 
     while True:
-        Val = DatabaseWork.getFinished(database)
-        if Val == 1:
-            ready = not ready
-        
         if ready: break
         print("Waiting for a connection")
 
         while True:
+            Val = DatabaseWork.getFinished(database)
+            if Val == 1:
+                ready = not ready
+            if ready: break
             
             if PROTOCOL == 5:
                 data = Desempaquetamiento.UDP_frag_recv(s)

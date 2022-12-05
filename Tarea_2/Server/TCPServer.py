@@ -20,11 +20,6 @@ def TCPServerFunc(host, port, protocol, conf_p):
     ready = False
 
     while True:
-        #funcion que chequea SQL
-        Val = DatabaseWork.getFinished(database)
-        if Val == 1:
-            ready = not ready
-        
         if ready: break
 
         print("Waiting for a connection")
@@ -34,6 +29,12 @@ def TCPServerFunc(host, port, protocol, conf_p):
         print(f"Connected to ({addr[0]}) on port ({addr[1]})")
 
         while True:
+            Val = DatabaseWork.getFinished(database)
+            if Val == 1:
+                ready = not ready
+                
+            if ready: break
+            
             if PROTOCOL == 5:
                 data = Desempaquetamiento.TCP_frag_recv(s)
 
