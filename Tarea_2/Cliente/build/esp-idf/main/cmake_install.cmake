@@ -1,4 +1,4 @@
-# Install script for directory: /home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/main
+# Install script for directory: /home/jesus/esp/tarea1/IOT_Raspberry/Tarea_2/Cliente/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -16,7 +16,7 @@ menu "Example Configuration"
 
     config EXAMPLE_IPV4_ADDR
         string "IPV4 Address"
-        default "192.168.0.165"
+        default "192.168.4.1"
         depends on EXAMPLE_IPV4
         help
             The example will connect to this IPV4 address.
@@ -31,7 +31,7 @@ menu "Example Configuration"
     config EXAMPLE_PORT
         int "Port"
         range 0 65535
-        default 3333
+        default 5000
         help
             The remote port to which the client example will connect to.
 

@@ -11,4 +11,4 @@ else()
     include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 endif()
 
-project(tarea_uno)
+project(Cliente)

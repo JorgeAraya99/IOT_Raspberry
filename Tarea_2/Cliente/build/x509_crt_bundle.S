@@ -1,4 +1,4 @@
-/* * Data converted from /home/jesus/esp/tarea1/IOT_Raspberry/Tarea_1_corregir/ESP32_Clients_T1/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from /home/jesus/esp/tarea1/IOT_Raspberry/Tarea_2/Cliente/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

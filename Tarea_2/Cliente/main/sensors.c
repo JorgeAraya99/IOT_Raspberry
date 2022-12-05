@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 float floatrand(float min, float max){     
     return min + (float)rand()/(float)(RAND_MAX/(max-min)); 
     }
@@ -28,16 +31,16 @@ float* thpc(){
 }
 
 char THPC_sensor_temp(){
-    int temp = (int) 5+(rand()%25);
+    char temp = (char) 5+(rand()%25);
     return temp;
 }
 
 char THPC_sensor_hum(){
-    int hum = (int) 30+(rand()%50);
+    char hum = (char) 30+(rand()%50);
     return hum;
 }
 
-float THPC_sensor_pres(){
+int THPC_sensor_pres(){
     int pres = (int) 1000 + (rand()%200);
     return pres;
 }
@@ -48,7 +51,7 @@ float THPC_sensor_co(){
 }
 
 char batt_sensor(){
-    u_int8 bat = (u_int8) 1+(rand()%99);
+    char bat = (char) 1+(rand()%99);
     return bat;
 }
 

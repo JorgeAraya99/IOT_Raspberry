@@ -1,3 +1,8 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "sensors.c"
+
 unsigned short lengmsg[6] = {2, 6, 16, 20, 44, 24016};
 unsigned short dataLength(char protocol){
     return lengmsg[ (unsigned int) protocol];
@@ -16,8 +21,8 @@ char* header(char protocol, char status){
 	char* head = malloc(12);
 
     short ID = 1;
+    u_int8_t* MACaddrs = malloc(6);
     esp_efuse_mac_get_default(MACaddrs);
-    uint8_t* MACaddrs = malloc(6);
     //memcpy((void*) &(head[0]), (void*) MACaddrs, 2);
     memcpy((void*) &(head[0]), (void*) &ID, 2);
     //memcpy((void*) &(head[0]), ID, 2);
@@ -31,16 +36,15 @@ char* header(char protocol, char status){
 }
 
 // Arma un paquete para el protocolo de inicio, que busca solo respuesta
-char* dataprotocol00(){
+char* dataprotocol0(){
     char* msg = malloc(dataLength(0));
     msg[0] = 1;
     return msg;
 }
 
-// Arma un paquete para el protocolo 0, con la bateria
-char* dataprotocol0(){
+// Arma un paquete para el protocolo 1, con la bateria
+char* dataprotocol1(){
     char* msg = malloc(dataLength(1));
-    //char batt = batt_sensor();
     char k = (char) 1;
     msg[0] = k;
     char batt = batt_sensor();
@@ -50,7 +54,7 @@ char* dataprotocol0(){
     return msg;
 }
 
-char* dataprotocol1(){   
+char* dataprotocol2(){   
     char* msg = malloc(dataLength(2));
     char k = (char) 1;
     msg[0] = k;
@@ -60,7 +64,7 @@ char* dataprotocol1(){
     memcpy((void*) &(msg[2]), (void*) &t, 4);
     char temp = THPC_sensor_temp();
     msg[6] = temp;
-    float press = THPC_sensor_pres();
+    int press = THPC_sensor_pres();
     memcpy((void*) &(msg[7]), (void*) &press, 4);
     char hum = THPC_sensor_hum();
     msg[11] = hum;
@@ -69,15 +73,17 @@ char* dataprotocol1(){
     return msg;
 }
 
-char* dataprotocol2(){
+char* dataprotocol3(){
     char* msg = malloc(dataLength(3));
+    char k = (char) 1;
+    msg[0] = k;
     char batt = batt_sensor();
     msg[1] = batt;
     int t = getTime();
     memcpy((void*) &(msg[2]), (void*) &t, 4);
     char temp = THPC_sensor_temp();
     msg[6] = temp;
-    float press = THPC_sensor_pres();
+    int press = THPC_sensor_pres();
     memcpy((void*) &(msg[7]), (void*) &press, 4);
     char hum = THPC_sensor_hum();
     msg[11] = hum;
@@ -89,7 +95,7 @@ char* dataprotocol2(){
     return msg;
 }
 
-char* dataprotocol3(){
+char* dataprotocol4(){
     
     char* msg = malloc(dataLength(4));
     char batt = batt_sensor();
@@ -100,7 +106,7 @@ char* dataprotocol3(){
     memcpy((void*) &(msg[2]), (void*) &t, 4);
     char temp = THPC_sensor_temp();
     msg[6] = temp;
-    float press = THPC_sensor_pres();
+    int press = THPC_sensor_pres();
     memcpy((void*) &(msg[7]), (void*) &press, 4);
     char hum = THPC_sensor_hum();
     msg[11] = hum;
@@ -125,7 +131,7 @@ char* dataprotocol3(){
     return msg;
 }
 
-char* dataprotocol4(){
+char* dataprotocol5(){
     char* msg = malloc(dataLength(5));
     char k = (char) 1;
     msg[0] = k;
@@ -135,18 +141,24 @@ char* dataprotocol4(){
     memcpy((void*) &(msg[2]), (void*) &t, 4);
     char temp = THPC_sensor_temp();
     msg[6] = temp;
-    float press = THPC_sensor_pres();
+    int press = THPC_sensor_pres();
     memcpy((void*) &(msg[7]), (void*) &press, 4);
     char hum = THPC_sensor_hum();
     msg[11] = hum;
     float co = THPC_sensor_co();
     memcpy((void*) &(msg[12]), (void*) &co, 4);
-    float* accx = acc_sensor_acc_x();
-    memcpy((void*) &(msg[16]), (void*) &accx, 4);
-    float* accy = acc_sensor_acc_y();
-    memcpy((void*) &(msg[8016]), (void*) &accy, 4);
-    float* accz = acc_sensor_acc_z();
-    memcpy((void*) &(msg[16016]), (void*) &accz, 4);
+    float* accx = acc();
+    memcpy((void*) &(msg[16]), (void*) &accx, 8000);
+    float* accy = acc();
+    memcpy((void*) &(msg[8016]), (void*) &accy, 8000);
+    float* accz = acc();
+    memcpy((void*) &(msg[16016]), (void*) &accz, 8000);
+    float* rgyr_x = rgyr();
+    memcpy((void*) &(msg[24016]), (void*) &rgyr_x, 8000);
+    float* rgyr_y = rgyr();
+    memcpy((void*) &(msg[32016]), (void*) &rgyr_y, 8000);
+    float* rgyr_z = rgyr();
+    memcpy((void*) &(msg[40016]), (void*) &rgyr_z, 8000);
     return msg;
 }
 
